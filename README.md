@@ -1,6 +1,6 @@
 ## Purpose
 
-Deploy a VM on LAB's Nutanix.
+Deploy an UBUNTU VM on LAB's Nutanix.
 
 ## Prerequisites
 
