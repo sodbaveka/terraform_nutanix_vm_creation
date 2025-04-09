@@ -1,0 +1,8 @@
+cluster_name = "Nutanix-LAB"
+subnet_name  = "VLAN 99 - LAB"
+subnet_uuid = "1ee12504-0beb-40cf-a3b6-9b6b6aed3339"
+nutanix_username     = "to_be_completed"
+nutanix_password     = "to_be_completed"
+nutanix_endpoint     = "172.27.99.240"
+vm_name = "MDT-"
+vm_ip01 = "to_be_completed"
