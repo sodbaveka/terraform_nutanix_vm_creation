@@ -19,7 +19,7 @@ data "nutanix_subnet" "subnet" {
 }
 
 resource "nutanix_virtual_machine" "vm" {
-  name                 = "${var.vm_name}${local.current_day}"
+  name                 = "${var.vm_name}${local.current_timestamp}"
   cluster_uuid         = data.nutanix_cluster.cluster.id
   num_vcpus_per_socket = "2"
   num_sockets          = "1"
@@ -49,7 +49,7 @@ resource "nutanix_virtual_machine" "vm" {
   #     }
   #   }
   # }
-  guest_customization_cloud_init_user_data = base64encode(file("./cloud-init_user-data.sh"))
+  #guest_customization_cloud_init_user_data = base64encode(file("./cloud-init_user-data.sh"))
 
   disk_list {
 
@@ -83,12 +83,12 @@ resource "nutanix_virtual_machine" "vm" {
     }
   }
 
-  # guest_customization_cloud_init_user_data = base64encode(templatefile("~/Projets/nutanix/cloud-init_user-data.tpl", {
-  #     hostname       = "${var.vm_name}${local.current_day}"
-  #     ipv4_address   = "${var.vm_ip01}${var.subnet_netmask}"
-  #     ipv4_gateway   = var.subnet_gw
-  #     name_server    = var.subnet_dns
-  #   }))
+  guest_customization_cloud_init_user_data = base64encode(templatefile("./cloud-init_user-data.sh", {
+      hostname       = "${var.vm_name}${local.current_timestamp}"
+      ipv4_address   = "${var.vm_ip01}${var.subnet_netmask}"
+      ipv4_gateway   = var.subnet_gw
+      name_server    = var.subnet_dns
+    }))
     
   #guest_customization_cloud_init_user_data = "${base64encode("${file("cloud-init_user-data.yml")}")}"
 

@@ -34,4 +34,9 @@ variable "nutanix_username" {
 variable "vm_name" {
   type = string
 }
-
+variable "new_user_name" {
+  type = string
+}
+variable "new_user_password" {
+  type = string
+}
