@@ -88,6 +88,8 @@ resource "nutanix_virtual_machine" "vm" {
       ipv4_address   = "${var.vm_ip01}${var.subnet_netmask}"
       ipv4_gateway   = var.subnet_gw
       name_server    = var.subnet_dns
+      new_user_name = var.new_user_name
+      new_user_password = var.new_user_password
     }))
     
   #guest_customization_cloud_init_user_data = "${base64encode("${file("cloud-init_user-data.yml")}")}"

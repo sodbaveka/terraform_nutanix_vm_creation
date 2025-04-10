@@ -10,3 +10,5 @@ vm_ip01 = "" #to_be_completed
 subnet_netmask = "/24"
 subnet_gw = "172.27.99.1"
 subnet_dns = "[172.27.90.10, 172.27.91.10]"
+new_user_name = "foo"
+new_user_password = "bar"
