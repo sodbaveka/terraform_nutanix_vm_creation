@@ -3,14 +3,15 @@ locals {
     current_day = formatdate("YYYY-MM-DD", local.current_timestamp)
 }
 
-resource "nutanix_image" "nutanix_image_ubuntu" {
-  name        = "ubuntu_image_mdt"
-  description = "Ubuntu_Image_For_Nutanix"
-  source_uri  = "http://archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso"
-}
+# resource "nutanix_image" "nutanix_image_ubuntu" {
+#   name        = "ubuntu_image_mdt"
+#   description = "Ubuntu_Image_For_Nutanix"
+#   source_uri  = "http://archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso"
+# }
 
 data "nutanix_cluster" "cluster" {
-  name = var.cluster_name
+  #name = var.cluster_name
+  cluster_id = var.cluster_uuid
 }
 
 data "nutanix_subnet" "subnet" {
@@ -24,22 +25,54 @@ resource "nutanix_virtual_machine" "vm" {
   num_sockets          = "1"
   memory_size_mib      = 4096
 
-  disk_list {
-    data_source_reference = {
-      kind = "image"
-      uuid = nutanix_image.nutanix_image_ubuntu.id
-    }
+  # disk_list {
+  #   data_source_reference = {
+  #     kind = "image"
+  #     uuid = nutanix_image.nutanix_image_ubuntu.id
+  #   }
+  # }
+
+  #This parent_reference is what actually tells the provider to clone the specified VM
+  parent_reference = {
+    kind = "vm"
+    name = "111-debian00-MDT"
+    uuid = "a3b9b716-66f6-42c8-97b0-b03712088990"
   }
 
+  # disk_list {
+  #   disk_size_bytes = 10 * 1024 * 1024 * 1024
+  #   device_properties {
+  #     device_type = "DISK"
+  #     disk_address = {
+  #       "adapter_type" = "SCSI"
+  #       "device_index" = "1"
+  #     }
+  #   }
+  # }
+  guest_customization_cloud_init_user_data = base64encode(file("./cloud-init_user-data.sh"))
+
   disk_list {
-    disk_size_bytes = 10 * 1024 * 1024 * 1024
-    device_properties {
-      device_type = "DISK"
-      disk_address = {
-        "adapter_type" = "SCSI"
-        "device_index" = "1"
-      }
+
+    data_source_reference = {
+      kind = "vm"
+      name = "111-debian00-MDT"
+      uuid = "a3b9b716-66f6-42c8-97b0-b03712088990"
     }
+
+    # # Do not touch this, cloning randomly adds a CDROM device and will break if you don't define it here
+    # device_properties {
+    #   device_type = "CDROM"
+    #   disk_address = {
+    #     device_index = 3
+    #     adapter_type = "IDE"
+    #   }
+    # }
+
+  }
+
+  serial_port_list {
+    index = 0
+    is_connected = "true"
   }
 
   nic_list {
@@ -50,8 +83,25 @@ resource "nutanix_virtual_machine" "vm" {
     }
   }
 
+  # guest_customization_cloud_init_user_data = base64encode(templatefile("~/Projets/nutanix/cloud-init_user-data.tpl", {
+  #     hostname       = "${var.vm_name}${local.current_day}"
+  #     ipv4_address   = "${var.vm_ip01}${var.subnet_netmask}"
+  #     ipv4_gateway   = var.subnet_gw
+  #     name_server    = var.subnet_dns
+  #   }))
+    
+  #guest_customization_cloud_init_user_data = "${base64encode("${file("cloud-init_user-data.yml")}")}"
+
 }
 
 output "ip_address" {
   value = nutanix_virtual_machine.vm.nic_list_status.0.ip_endpoint_list[0]["ip"]
+}
+
+output "cluster_uuid" {
+   value = data.nutanix_cluster.cluster.id
+}
+
+output "cluster_name" {
+   value = data.nutanix_cluster.cluster.name
 }
