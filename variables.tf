@@ -40,3 +40,9 @@ variable "new_user_name" {
 variable "new_user_password" {
   type = string
 }
+variable "clone_name" {
+  type = string
+}
+variable "clone_uuid" {
+  type = string
+}

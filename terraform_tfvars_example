@@ -12,3 +12,5 @@ subnet_gw = "" #to_be_completed
 subnet_dns = "" #to_be_completed
 new_user_name = "foo"
 new_user_password = "bar"
+clone_name = "" #to_be_completed
+clone_uuid = "" #to_be_completed

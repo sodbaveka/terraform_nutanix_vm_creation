@@ -35,8 +35,8 @@ resource "nutanix_virtual_machine" "vm" {
   #This parent_reference is what actually tells the provider to clone the specified VM
   parent_reference = {
     kind = "vm"
-    name = "111-debian12-MDT"
-    uuid = "36201406-f484-48bf-b8ca-2f33fef257b8"
+    name = var.clone_name
+    uuid = var.clone_uuid
   }
 
   # disk_list {
@@ -55,8 +55,8 @@ resource "nutanix_virtual_machine" "vm" {
 
     data_source_reference = {
       kind = "vm"
-      name = "111-debian12-MDT"
-      uuid = "36201406-f484-48bf-b8ca-2f33fef257b8"
+      name = var.clone_name
+      uuid = var.clone_uuid
     }
 
     # # Do not touch this, cloning randomly adds a CDROM device and will break if you don't define it here
