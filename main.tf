@@ -22,7 +22,7 @@ resource "nutanix_virtual_machine" "vm" {
   name                 = "${var.vm_name}${local.current_timestamp}"
   cluster_uuid         = data.nutanix_cluster.cluster.id
   num_vcpus_per_socket = "2"
-  num_sockets          = "1"
+  num_sockets          = "2"
   memory_size_mib      = 4096
 
   # disk_list {
@@ -35,8 +35,8 @@ resource "nutanix_virtual_machine" "vm" {
   #This parent_reference is what actually tells the provider to clone the specified VM
   parent_reference = {
     kind = "vm"
-    name = "111-debian00-MDT"
-    uuid = "a3b9b716-66f6-42c8-97b0-b03712088990"
+    name = "111-debian12-MDT"
+    uuid = "36201406-f484-48bf-b8ca-2f33fef257b8"
   }
 
   # disk_list {
@@ -55,8 +55,8 @@ resource "nutanix_virtual_machine" "vm" {
 
     data_source_reference = {
       kind = "vm"
-      name = "111-debian00-MDT"
-      uuid = "a3b9b716-66f6-42c8-97b0-b03712088990"
+      name = "111-debian12-MDT"
+      uuid = "36201406-f484-48bf-b8ca-2f33fef257b8"
     }
 
     # # Do not touch this, cloning randomly adds a CDROM device and will break if you don't define it here
@@ -85,7 +85,7 @@ resource "nutanix_virtual_machine" "vm" {
 
   guest_customization_cloud_init_user_data = base64encode(templatefile("./cloud-init_user-data.sh", {
       hostname       = "${var.vm_name}${local.current_timestamp}"
-      ipv4_address   = "${var.vm_ip01}${var.subnet_netmask}"
+      ipv4_address   = "${var.vm_ip01}"
       ipv4_gateway   = var.subnet_gw
       name_server    = var.subnet_dns
       new_user_name = var.new_user_name
